@@ -77,9 +77,13 @@ public class LesionesLoader implements CommandLineRunner {
             e.setCirugia(Boolean.parseBoolean(f[6]));
             e.setDiagnosticoClub(f[8]);
             e.setFuenteUrl(f[9]);
-            e.setFuenteNombre(f[9].contains("jornadaperfecta") ? "Jornada Perfecta" : "FútbolFantasy");
+            e.setFuenteNombre(nombreFuente(f[9]));
             e.setFechaFuente(Fechas.hoy());
-            e.setNotas("Carga inicial 10-10-2026. Fecha de inicio aproximada (según la fuente)."
+            boolean exacto = f.length > 10 && Boolean.parseBoolean(f[10]);
+            String extra = f.length > 11 ? f[11].trim() : "";
+            e.setNotas("Carga inicial 10-10-2026. "
+                    + (exacto ? "Fecha de inicio verificada en la fuente." : "Fecha de inicio aproximada.")
+                    + (extra.isEmpty() ? "" : " " + extra)
                     + (Boolean.parseBoolean(f[7]) ? " REVISAR: tipo de lesión no precisado en la fuente." : "")
                     + (lado == Episodio.Lado.NO_APLICA && tipo.getZona().isBilateral() ? " Lado sin confirmar." : ""));
             episodios.save(e);
@@ -88,6 +92,13 @@ public class LesionesLoader implements CommandLineRunner {
         if (nuevos + existentes + omitidos > 0) {
             log.info("lesiones.csv: {} nuevas, {} ya existentes, {} omitidas", nuevos, existentes, omitidos);
         }
+    }
+
+    /** Nombre corto de la web a partir de la URL (solo el dominio). */
+    private static String nombreFuente(String url) {
+        String host = url.replaceFirst("^https?://", "").replaceFirst("^www\\.", "");
+        int i = host.indexOf('/');
+        return i > 0 ? host.substring(0, i) : host;
     }
 
     private List<String[]> leer(String ruta) throws IOException {

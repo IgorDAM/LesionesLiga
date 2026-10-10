@@ -43,7 +43,7 @@ Incluye adrede un caso con pocos datos (LCA, 3 casos) para ver el aviso de baja 
 
 ## Carga inicial de lesiones (10-10-2026)
 
-`src/main/resources/seed/lesiones.csv` trae **58 lesiones activas reales** (47 de Primera, 11 de Segunda) recogidas de
+`src/main/resources/seed/lesiones.csv` trae **56 lesiones activas reales** (45 de Primera, 11 de Segunda, 19 con fecha verificada) recogidas de
 [FútbolFantasy](https://www.futbolfantasy.com/laliga/lesionados) y Jornada Perfecta ([Primera](https://www.jornadaperfecta.com/lesionados), [Segunda](https://www.jornadaperfecta.com/segunda/lesionados)).
 `LesionesLoader` las inserta al arrancar (perfil normal, no demo/test) sin duplicar.
 
