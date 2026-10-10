@@ -1,0 +1,67 @@
+zona;nombre;categoria;gravedad
+cabeza;Conmoción cerebral;OTRA;GRAVE
+cabeza;Fractura facial o nasal;OSEA;MODERADA
+cabeza;Herida o contusión;CONTUSION;LEVE
+cuello;Contractura cervical;MUSCULAR;LEVE
+cuello;Lesión cervical;OTRA;GRAVE
+hombro;Luxación de hombro;ARTICULAR;GRAVE
+hombro;Esguince acromioclavicular;LIGAMENTOSA;MODERADA
+hombro;Fractura de clavícula;OSEA;GRAVE
+hombro;Sobrecarga muscular;MUSCULAR;LEVE
+pecho;Contusión costal;CONTUSION;LEVE
+pecho;Fractura de costilla;OSEA;MODERADA
+pecho;Sobrecarga pectoral;MUSCULAR;LEVE
+espalda-alta;Contractura o sobrecarga;MUSCULAR;LEVE
+espalda-alta;Fractura vertebral;OSEA;GRAVE
+lumbar;Lumbalgia o sobrecarga;MUSCULAR;LEVE
+lumbar;Contractura;MUSCULAR;LEVE
+lumbar;Hernia discal;OTRA;GRAVE
+abdomen;Sobrecarga abdominal;MUSCULAR;LEVE
+abdomen;Rotura muscular abdominal;MUSCULAR;MODERADA
+abdomen;Hernia;OTRA;GRAVE
+brazo;Contusión;CONTUSION;LEVE
+brazo;Rotura muscular;MUSCULAR;MODERADA
+brazo;Fractura de húmero;OSEA;GRAVE
+codo;Esguince de codo;LIGAMENTOSA;MODERADA
+codo;Luxación de codo;ARTICULAR;GRAVE
+codo;Fractura de codo;OSEA;GRAVE
+antebrazo;Contusión;CONTUSION;LEVE
+antebrazo;Fractura de cúbito o radio;OSEA;GRAVE
+mano;Esguince de muñeca o dedo;LIGAMENTOSA;LEVE
+mano;Fractura de muñeca, mano o dedos;OSEA;MODERADA
+pubis;Pubalgia;OTRA;MODERADA
+pubis;Osteítis de pubis;OSEA;GRAVE
+ingle;Sobrecarga de aductores;MUSCULAR;LEVE
+ingle;Rotura de aductor;MUSCULAR;MODERADA
+ingle;Lesión de cadera;ARTICULAR;GRAVE
+gluteo;Sobrecarga glútea;MUSCULAR;LEVE
+gluteo;Rotura muscular glútea;MUSCULAR;MODERADA
+gluteo;Contusión;CONTUSION;LEVE
+cuadriceps;Sobrecarga;MUSCULAR;LEVE
+cuadriceps;Rotura fibrilar;MUSCULAR;MODERADA
+cuadriceps;Rotura del tendón rotuliano o cuadricipital;TENDINOSA;GRAVE
+cuadriceps;Contusión;CONTUSION;LEVE
+isquiotibial;Sobrecarga;MUSCULAR;LEVE
+isquiotibial;Rotura fibrilar;MUSCULAR;MODERADA
+isquiotibial;Rotura completa o avulsión;MUSCULAR;GRAVE
+rodilla;Esguince de ligamento lateral interno;LIGAMENTOSA;MODERADA
+rodilla;Rotura de ligamento cruzado anterior;LIGAMENTOSA;GRAVE
+rodilla;Lesión de menisco;ARTICULAR;MODERADA
+rodilla;Tendinopatía rotuliana;TENDINOSA;MODERADA
+rodilla;Contusión;CONTUSION;LEVE
+gemelo;Sobrecarga;MUSCULAR;LEVE
+gemelo;Rotura fibrilar;MUSCULAR;MODERADA
+gemelo;Rotura completa;MUSCULAR;GRAVE
+tibia;Contusión;CONTUSION;LEVE
+tibia;Periostitis;OSEA;LEVE
+tibia;Fractura de tibia o peroné;OSEA;GRAVE
+aquiles;Tendinopatía aquílea;TENDINOSA;MODERADA
+aquiles;Rotura del tendón de Aquiles;TENDINOSA;GRAVE
+tobillo;Esguince grado I;LIGAMENTOSA;LEVE
+tobillo;Esguince grado II-III;LIGAMENTOSA;MODERADA
+tobillo;Lesión de sindesmosis;LIGAMENTOSA;GRAVE
+tobillo;Fractura de tobillo;OSEA;GRAVE
+pie;Contusión;CONTUSION;LEVE
+pie;Fascitis plantar;TENDINOSA;MODERADA
+pie;Fractura de metatarsiano;OSEA;GRAVE
+pie;Lesión de Lisfranc;LIGAMENTOSA;GRAVE

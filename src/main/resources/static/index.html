@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parte de lesiones · Primera y Segunda</title>
+  <meta name="description" content="Lesiones actuales de los jugadores de Primera y Segunda División y comparativa de tiempos de recuperación por tipo de lesión.">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div>
+      <h1>Parte de lesiones</h1>
+      <p class="lema">Primera y Segunda División · recuperaciones comparadas</p>
+    </div>
+    <p id="actualizacion" class="actualizacion" aria-live="polite"></p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" data-tab="ahora" aria-selected="true">Lesionados ahora</button>
+    <button role="tab" data-tab="jugadores" aria-selected="false">Jugadores</button>
+    <button role="tab" data-tab="comparar" aria-selected="false">Comparar recuperaciones</button>
+    <button role="tab" data-tab="admin" aria-selected="false">Administración</button>
+  </nav>
+
+  <main>
+    <section id="tab-ahora" class="panel" role="tabpanel"></section>
+    <section id="tab-jugadores" class="panel" role="tabpanel" hidden></section>
+    <section id="tab-comparar" class="panel" role="tabpanel" hidden></section>
+    <section id="tab-admin" class="panel" role="tabpanel" hidden></section>
+  </main>
+
+  <footer class="pie">
+    <p>Los datos se recopilan a mano de comunicados oficiales de clubes y de LaLiga; cada lesión enlaza a su fuente.
+      Proyecto personal, sin relación con LaLiga ni con los clubes. Las comparativas son orientativas y no constituyen consejo médico.</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

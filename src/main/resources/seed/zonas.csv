@@ -1,0 +1,23 @@
+codigo;nombre;vista;bilateral;orden
+cabeza;Cabeza;AMBAS;false;1
+cuello;Cuello;AMBAS;false;2
+hombro;Hombro;AMBAS;true;3
+pecho;Pecho y costillas;FRONTAL;false;4
+espalda-alta;Espalda alta / dorsal;POSTERIOR;false;5
+lumbar;Zona lumbar;POSTERIOR;false;6
+abdomen;Abdomen;FRONTAL;false;7
+brazo;Brazo;AMBAS;true;8
+codo;Codo;AMBAS;true;9
+antebrazo;Antebrazo;AMBAS;true;10
+mano;Muñeca y mano;AMBAS;true;11
+pubis;Pubis;FRONTAL;false;12
+ingle;Ingle / aductores;FRONTAL;true;13
+gluteo;Glúteo;POSTERIOR;true;14
+cuadriceps;Cuádriceps;FRONTAL;true;15
+isquiotibial;Isquiotibiales;POSTERIOR;true;16
+rodilla;Rodilla;AMBAS;true;17
+gemelo;Gemelo / sóleo;POSTERIOR;true;18
+tibia;Tibia / espinilla;FRONTAL;true;19
+aquiles;Tendón de Aquiles;POSTERIOR;true;20
+tobillo;Tobillo;AMBAS;true;21
+pie;Pie;AMBAS;true;22

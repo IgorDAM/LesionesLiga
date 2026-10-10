@@ -1,0 +1,60 @@
+club;jugador;zona;tipo;lado;fecha_inicio;cirugia;revisar;diagnostico;fuente
+# Lesiones activas detectadas. fecha_inicio de Primera = 'lesionado desde' de FútbolFantasy (09-10-2026); de Segunda = fecha de detección (la fuente no da fecha). revisar=true: tipo no precisado en la fuente.
+Alavés;Facundo Garcés;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-09-08;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Alavés;Ville Koski;cuadriceps;Sobrecarga;NO_APLICA;2026-10-02;false;true;Lesión en el cuádriceps;https://www.futbolfantasy.com/laliga/lesionados
+Alavés;Mikel Rodríguez;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-09-03;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Athletic Bilbao;Oihan Sancet;gemelo;Sobrecarga;NO_APLICA;2026-10-07;false;true;Lesión en el sóleo;https://www.futbolfantasy.com/laliga/lesionados
+Athletic Bilbao;Nico Williams;cuadriceps;Sobrecarga;NO_APLICA;2026-10-01;false;true;Lesión en el recto anterior;https://www.futbolfantasy.com/laliga/lesionados
+Athletic Bilbao;Unai Egiluz;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-05-15;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Barcelona;Raphinha;isquiotibial;Sobrecarga;NO_APLICA;2026-09-29;false;true;Edema en el bíceps femoral;https://www.futbolfantasy.com/laliga/lesionados
+Barcelona;Andreas Christensen;cuadriceps;Rotura fibrilar;NO_APLICA;2026-09-19;false;false;Rotura en el recto anterior;https://www.futbolfantasy.com/laliga/lesionados
+Barcelona;Roony Bardghji;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-08-10;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Barcelona;Frenkie de Jong;rodilla;Esguince de ligamento lateral interno;NO_APLICA;2026-07-04;false;true;Lesión de rodilla (ligamento lateral interno);https://www.futbolfantasy.com/laliga/lesionados
+Real Betis;Junior Firpo;ingle;Sobrecarga de aductores;NO_APLICA;2026-10-02;false;true;Lesión en el aductor;https://www.futbolfantasy.com/laliga/lesionados
+Real Betis;Aitor Ruibal;rodilla;Lesión de menisco;NO_APLICA;2026-05-14;true;false;Operado del menisco;https://www.futbolfantasy.com/laliga/lesionados
+Celta Vigo;Carl Starfelt;isquiotibial;Sobrecarga;NO_APLICA;2026-10-02;false;true;Lesión en el semimembranoso;https://www.futbolfantasy.com/laliga/lesionados
+Celta Vigo;Andrés Antañón;tobillo;Esguince grado I;NO_APLICA;2026-09-12;false;true;Esguince de tobillo;https://www.futbolfantasy.com/laliga/lesionados
+Deportivo A Coruña;Marc Casadó;hombro;Fractura de clavícula;NO_APLICA;2026-09-20;false;false;Fractura de clavícula;https://www.futbolfantasy.com/laliga/lesionados
+Deportivo A Coruña;Pierre-Emerick Aubameyang;rodilla;Lesión de menisco;NO_APLICA;2026-09-23;true;false;Operado del menisco;https://www.futbolfantasy.com/laliga/lesionados
+Deportivo A Coruña;Zakaria Eddahchouri;mano;Fractura de muñeca, mano o dedos;NO_APLICA;2026-09-24;false;false;Fractura de muñeca;https://www.futbolfantasy.com/laliga/lesionados
+Elche;Buba Sangaré;isquiotibial;Sobrecarga;NO_APLICA;2026-09-18;false;true;Lesión en los isquiotibiales;https://www.futbolfantasy.com/laliga/lesionados
+Espanyol;Kike García;isquiotibial;Rotura completa o avulsión;NO_APLICA;2026-08-01;false;false;Rotura completa del tendón proximal del bíceps femoral;https://www.futbolfantasy.com/laliga/lesionados
+Getafe;Christantus Uche;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-08-06;false;false;Rotura de ligamento cruzado y menisco (se registra el cruzado);https://www.futbolfantasy.com/laliga/lesionados
+Levante;Hugo Sotelo;rodilla;Esguince de ligamento lateral interno;NO_APLICA;2026-09-13;false;true;Esguince de rodilla;https://www.futbolfantasy.com/laliga/lesionados
+Levante;Karl Etta Eyong;cuadriceps;Sobrecarga;NO_APLICA;2026-09-04;false;true;Lesión en el recto anterior;https://www.futbolfantasy.com/laliga/lesionados
+Levante;Alejandro Primo;hombro;Luxación de hombro;NO_APLICA;2026-04-26;false;false;Luxación de hombro;https://www.futbolfantasy.com/laliga/lesionados
+Málaga;Jens Cajuste;cuadriceps;Sobrecarga;NO_APLICA;2026-09-16;false;true;Lesión en el cuádriceps;https://www.futbolfantasy.com/laliga/lesionados
+Málaga;Julen Lobete;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-09-04;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Málaga;Aarón Ochoa;rodilla;Lesión de menisco;NO_APLICA;2026-08-10;false;false;Rotura de menisco;https://www.futbolfantasy.com/laliga/lesionados
+Osasuna;Jorge Herrando;ingle;Sobrecarga de aductores;NO_APLICA;2026-08-31;false;true;Lesión en el aductor;https://www.futbolfantasy.com/laliga/lesionados
+Osasuna;Raúl Moro;isquiotibial;Sobrecarga;NO_APLICA;2026-09-19;false;true;Lesión en los isquiotibiales;https://www.futbolfantasy.com/laliga/lesionados
+Osasuna;Romain Del Castillo;ingle;Sobrecarga de aductores;NO_APLICA;2026-10-08;false;true;Lesión en el aductor;https://www.futbolfantasy.com/laliga/lesionados
+Rayo Vallecano;Augusto Batalla;tibia;Fractura de tibia o peroné;NO_APLICA;2026-08-20;false;false;Fractura de tibia;https://www.futbolfantasy.com/laliga/lesionados
+Rayo Vallecano;Luiz Felipe;isquiotibial;Rotura fibrilar;NO_APLICA;2026-04-16;false;false;Rotura en los isquiotibiales;https://www.futbolfantasy.com/laliga/lesionados
+Real Madrid;Raúl Asencio;tibia;Fractura de tibia o peroné;NO_APLICA;2026-09-30;true;true;Operado de la tibia;https://www.futbolfantasy.com/laliga/lesionados
+Real Madrid;Éder Militão;isquiotibial;Sobrecarga;NO_APLICA;2026-04-21;false;true;Lesión en el bíceps femoral;https://www.futbolfantasy.com/laliga/lesionados
+Real Madrid;Rodrygo Goes;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-03-02;false;false;Rotura de ligamento cruzado y menisco (se registra el cruzado);https://www.futbolfantasy.com/laliga/lesionados
+Real Madrid;Ferland Mendy;cuadriceps;Sobrecarga;NO_APLICA;2026-05-03;false;true;Lesión en el recto femoral;https://www.futbolfantasy.com/laliga/lesionados
+Real Sociedad;Jon Aramburu;gemelo;Sobrecarga;NO_APLICA;2026-10-07;false;true;Lesión en el sóleo;https://www.futbolfantasy.com/laliga/lesionados
+Real Sociedad;Álvaro Odriozola;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-02-21;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Sevilla;Marcão;cuadriceps;Sobrecarga;NO_APLICA;2026-10-02;false;true;Lesión en el recto anterior;https://www.futbolfantasy.com/laliga/lesionados
+Sevilla;Lucas Stassin;ingle;Sobrecarga de aductores;NO_APLICA;2026-09-16;false;true;Lesión en el aductor;https://www.futbolfantasy.com/laliga/lesionados
+Sevilla;Rubén Vargas;rodilla;Lesión de menisco;NO_APLICA;2026-09-03;false;true;Parameniscitis en la rodilla;https://www.futbolfantasy.com/laliga/lesionados
+Valencia;Sergi Canós;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-05-13;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Valencia;Umar Sadiq;isquiotibial;Sobrecarga;NO_APLICA;2026-08-30;false;true;Lesión en los isquiotibiales;https://www.futbolfantasy.com/laliga/lesionados
+Valencia;Diego López;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-05-23;false;false;Rotura de ligamento cruzado anterior;https://www.futbolfantasy.com/laliga/lesionados
+Valencia;Dimitri Foulquier;ingle;Sobrecarga de aductores;NO_APLICA;2026-09-05;false;true;Lesión en el aductor;https://www.futbolfantasy.com/laliga/lesionados
+Valencia;José Manuel Copete;rodilla;Lesión de menisco;NO_APLICA;2026-02-25;false;false;Rotura de menisco;https://www.futbolfantasy.com/laliga/lesionados
+Valencia;Mouctar Diakhaby;ingle;Sobrecarga de aductores;NO_APLICA;2026-09-06;false;true;Lesión en el aductor;https://www.futbolfantasy.com/laliga/lesionados
+Villarreal;Tajon Buchanan;isquiotibial;Sobrecarga;NO_APLICA;2026-10-05;false;true;Elongación en los isquiotibiales;https://www.futbolfantasy.com/laliga/lesionados
+Almería;Gui Guedes;rodilla;Lesión de menisco;NO_APLICA;2026-10-10;false;false;Lesión de menisco;https://www.jornadaperfecta.com/segunda/lesionados
+Cádiz;Iuri Tabatadze;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-10-10;false;false;Rotura del ligamento cruzado anterior y menisco (se registra el cruzado);https://www.jornadaperfecta.com/segunda/lesionados
+Castellón;Brignani;rodilla;Rotura de ligamento cruzado anterior;DERECHO;2026-10-10;false;false;Rotura de ligamento cruzado anterior, rodilla derecha;https://www.jornadaperfecta.com/segunda/lesionados
+Córdoba;Adilson;rodilla;Rotura de ligamento cruzado anterior;IZQUIERDO;2026-10-10;false;false;Rotura del ligamento cruzado anterior, rodilla izquierda;https://www.jornadaperfecta.com/segunda/lesionados
+Eibar;Sergio Álvarez;cuadriceps;Rotura fibrilar;DERECHO;2026-10-10;false;false;Rotura muscular en el recto anterior, pierna derecha;https://www.jornadaperfecta.com/segunda/lesionados
+Las Palmas;Sergio Ruiz;rodilla;Lesión de menisco;NO_APLICA;2026-10-10;false;false;Lesión en el menisco;https://www.jornadaperfecta.com/segunda/lesionados
+Oviedo;Chris Ramos;rodilla;Rotura de ligamento cruzado anterior;DERECHO;2026-10-10;false;false;Rotura del ligamento cruzado anterior, rodilla derecha;https://www.jornadaperfecta.com/segunda/lesionados
+Valladolid;Guille Bueno;rodilla;Rotura de ligamento cruzado anterior;NO_APLICA;2026-10-10;false;false;Rotura del ligamento cruzado anterior;https://www.jornadaperfecta.com/segunda/lesionados
+Sabadell;Gioacchini;rodilla;Rotura de ligamento cruzado anterior;DERECHO;2026-10-10;false;false;Rotura del ligamento cruzado anterior, rodilla derecha;https://www.jornadaperfecta.com/segunda/lesionados
+Sporting Gijón;Ignacio Martín;rodilla;Lesión de menisco;NO_APLICA;2026-10-10;false;false;Lesión en el menisco;https://www.jornadaperfecta.com/segunda/lesionados
+Sporting Gijón;Antonio Casas;isquiotibial;Rotura completa o avulsión;DERECHO;2026-10-10;false;false;Lesión de grado 3 en el bíceps femoral derecho;https://www.jornadaperfecta.com/segunda/lesionados
