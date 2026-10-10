@@ -60,7 +60,7 @@ function enlazarMapa(contenedor, alElegir) {
 }
 
 const opcionesZonas = () => estado.zonas.map((z) => `<option value="${esc(z.codigo)}">${esc(z.nombre)}</option>`).join('');
-const opcionesClubes = () => ['PRIMERA', 'SEGUNDA'].map((div) => `<optgroup label="${divisionTxt(div)} División">${
+const opcionesClubes = (solo = '') => ['PRIMERA', 'SEGUNDA'].filter((div) => !solo || div === solo).map((div) => `<optgroup label="${divisionTxt(div)} División">${
   estado.clubes.filter((c) => c.division === div).map((c) => `<option value="${c.id}">${esc(c.nombre)}</option>`).join('')}</optgroup>`).join('');
 
 const insignias = (e) => (e.recaida ? '<span class="badge aviso">recaída</span>' : '') + (e.cirugia ? '<span class="badge">cirugía</span>' : '');
@@ -105,7 +105,12 @@ function montarAhora() {
       <aside class="tarjeta"><h3>Dónde se lesionan</h3><div id="ahora-mapa"></div>
         <div class="leyenda"><span><i style="background:var(--alerta)"></i>Lesión activa</span><span>Pulsa una zona para filtrar</span></div></aside>
     </div>`;
-  $('#f-division').addEventListener('change', (e) => { filtros.division = e.target.value; cargarAhora(); });
+  $('#f-division').addEventListener('change', (e) => {
+    filtros.division = e.target.value;
+    filtros.clubId = ''; // el club elegido puede no ser de la nueva división
+    $('#f-club').innerHTML = `<option value="">Todos</option>${opcionesClubes(filtros.division)}`;
+    cargarAhora();
+  });
   $('#f-club').addEventListener('change', (e) => { filtros.clubId = e.target.value; cargarAhora(); });
   $('#f-zona').addEventListener('change', (e) => { filtros.zona = e.target.value; pintarAhora(); });
   enlazarMapa($('#ahora-mapa'), (zona) => {
