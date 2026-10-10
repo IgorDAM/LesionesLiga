@@ -38,7 +38,7 @@ Tenerlo todo en un grupo permite borrarlo entero con un clic si quieres parar.
 
 ### 4. La web (App Service)
 1. **Create a resource → Web App**.
-2. Grupo `rg-lesiones`, nombre único (será parte de la URL), **Publish: Code**, **Runtime stack: Java 21**, **Java web server stack: Java SE (Embedded Web Server)**, **Operating System: Linux**, región West Europe.
+2. Grupo `rg-lesiones`, nombre único (será parte de la URL), **Publish: Code**, **Runtime stack: Java 17**, **Java web server stack: Java SE (Embedded Web Server)**, **Operating System: Linux**, región West Europe.
 3. **Pricing plan: Free F1**. Si no aparece F1 para Linux en esa región, prueba otra región cercana.
 4. Create.
 
@@ -89,7 +89,7 @@ az webapp deploy --resource-group rg-lesiones --name NOMBRE_DE_TU_APP \
 |---|---|
 | La app no arranca y el log habla de conexión o `Login timeout` | La base estaba pausada y tardó en despertar; reinicia la app. Revisa también que *Allow Azure services* esté en Yes y que el usuario y la contraseña sean correctos. |
 | Error de tablas o de tipos al crear el esquema | Este proyecto se ha probado con H2; con SQL Server es la primera vez. Pásame el error del Log stream y lo corrijo. |
-| «502/503» o el sitio nunca responde | Revisa `SERVER_PORT` y `WEBSITES_PORT` = `8080` y que el runtime sea Java 21 (comprueba los disponibles con `az webapp list-runtimes --os linux`). |
+| «502/503» o el sitio nunca responde | Revisa `SERVER_PORT` y `WEBSITES_PORT` = `8080` y que el runtime sea Java 17 (comprueba los disponibles con `az webapp list-runtimes --os linux`). |
 | La app se detiene a media tarde | Se superó la cuota diaria de CPU de F1 (60 min). Se renueva solo; si te pasa a menudo, avísame y miramos cómo reducir el consumo. |
 
 ## ¿Y MySQL?

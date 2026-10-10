@@ -24,7 +24,7 @@ Al subirlo a GitHub, la acción `.github/workflows/ci.yml` ejecuta los tests aut
 
 ## Cómo ejecutarlo
 
-Requisitos: **Java 21** y **Maven**.
+Requisitos: **Java 17** y **Maven**.
 
 ```bash
 # Probar con datos FICTICIOS (base de datos en memoria, se borra al parar)
@@ -107,7 +107,7 @@ Administración (cabecera `X-Admin-Token`): `POST /api/admin/clubes`, `PUT /api/
 La guía paso a paso está en **[AZURE.md](AZURE.md)**. En resumen:
 
 1. **Base de datos:** Azure SQL Database con la oferta gratuita (100.000 vCore-segundos y 32 GB al mes, sin caducidad; elige «auto-pausa» al agotar el cupo).
-2. **Web:** Azure App Service, plan **Free F1**, Linux, Java 21 (60 min de CPU al día, URL `azurewebsites.net`, se duerme sin visitas).
+2. **Web:** Azure App Service, plan **Free F1**, Linux, Java 17 (60 min de CPU al día, URL `azurewebsites.net`, se duerme sin visitas).
 3. **Variables de entorno:** `SPRING_PROFILES_ACTIVE=prod`, `DATABASE_URL`, `DATABASE_USER`, `DATABASE_PASSWORD`, `ADMIN_TOKEN`, `SERVER_PORT=8080`, `WEBSITES_PORT=8080`.
 4. **Despliegue:** Deployment Center de Azure con GitHub (cada `git push` despliega) o `az webapp deploy`.
 
