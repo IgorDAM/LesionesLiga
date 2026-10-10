@@ -1,0 +1,4 @@
+club;jugador;tipo;fecha_alta_probable;fuente;confirmada;nota
+# Altas probables. confirmada=false: pendiente de que Igor las confirme (todavia no se aplican). Aun no las lee el cargador.
+Alavés;Ville Koski;Sobrecarga;2026-10-10;https://www.comuniate.com/noticias/38359/jugadores-convocados-para-el-partido-alaves-y-atletico-jornada-8;false;Convocado contra el Atlético (10-10). Su plazo inicial era de 4-5 semanas desde el 01-10.
+Rayo Vallecano;Luiz Felipe;Rotura fibrilar;2026-10-10;https://www.vavel.com/es/futbol/2026/10/10/rayo-vallecano/1274650-los-jugadores-convocados-por-benat-san-jose-para-recibir-al-athletic-club.html;false;Convocado contra el Athletic (10-10).

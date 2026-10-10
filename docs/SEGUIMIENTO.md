@@ -12,3 +12,9 @@ Cada sábado se contrastan las lesiones activas con las fuentes, se anotan las a
 - Correcciones de diagnóstico: De Jong (ligamento lateral interno, no cruzado), Asencio (fractura por estrés de tibia, operada el 01-10), Adilson (rotura parcial del LCA), Foulquier retirado (rodilla operada, tipo sin verificar), Ignacio Martín retirado (lesión no confirmada).
 - Probables altas a confirmar: Militão, Antañón, Vargas, Diakhaby.
 - Lesiones heredadas de 2025/26 a comprobar: Tabatadze, Adilson, Guille Bueno.
+
+## 2026-10-10 · contraste con convocatorias (parcial)
+- Convocados (probable alta): Ville Koski (Alavés–Atlético) y Luiz Felipe (Rayo–Athletic). Pendientes de confirmar en `seed/altas.csv`.
+- Mikel Rodríguez (Alavés, LCA): en la convocatoria sale un «Miguel Rodríguez», que puede ser otro jugador. No se da de alta.
+- Augusto Batalla (Rayo) no está convocado: sigue de baja.
+- El resto de partidos son el 11-10 y 12-10 y sus convocatorias aún no estaban publicadas. Pendiente repetirlo con todos los clubes.
