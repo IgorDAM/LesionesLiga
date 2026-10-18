@@ -4,6 +4,7 @@ Web personal para ir recopilando las lesiones de los jugadores de Primera y Segu
 consultar qué lesión tiene ahora mismo un jugador y comparar cuánto tardan en recuperarse
 los jugadores con **la misma lesión**.
 
+- **Web en producción**: <https://lesiones-liga-b0d6hpatcxfbcpd7.francecentral-01.azurewebsites.net/> (la primera carga puede tardar hasta un minuto: el plan gratuito duerme la app).
 - **Gratis de punta a punta**: Spring Boot + H2 en local; al publicar, Azure App Service (plan gratuito F1) y Azure SQL Database (oferta gratuita).
 - **Fuentes**: prensa, LaLiga y webs oficiales de los clubes, introducidas por ti una vez por semana.
   Cada lesión guarda el enlace a su fuente.
