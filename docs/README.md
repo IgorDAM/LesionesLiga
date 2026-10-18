@@ -131,6 +131,7 @@ Antes de nada, crea un presupuesto de 1 €/mes con alerta en Cost Management pa
 
 - Radar automático: feeds RSS de clubes y prensa filtrados por palabras clave (lesión, parte médico, baja…) que solo
   *propongan* candidatos; la verificación y el registro seguirían siendo manuales.
+- Pestaña «Historial» (o sección en «Lesionados ahora») con todos los jugadores ya recuperados, ordenados por fecha de alta y con filtros por división, club y zona. Hoy el histórico solo se ve en la ficha de cada jugador y en «Comparar recuperaciones».
 - Filtro por temporada y por posición en las comparativas.
 - Edición de episodios cerrados desde la web (la API ya la admite: `PUT /api/admin/episodios/{id}`).
 - Gráfico de evolución de lesiones por mes.
