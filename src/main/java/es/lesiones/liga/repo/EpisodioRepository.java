@@ -20,6 +20,11 @@ public interface EpisodioRepository extends JpaRepository<Episodio, Long> {
 
     boolean existsByJugadorIdAndTipoIdAndLadoAndFechaAltaIsNull(Long jugadorId, Long tipoId, Lado lado);
 
+    List<Episodio> findByJugadorIdAndTipoIdAndLadoAndFechaAltaIsNull(Long jugadorId, Long tipoId, Lado lado);
+
+    boolean existsByJugadorIdAndTipoIdAndLadoAndFechaInicio(Long jugadorId, Long tipoId, Lado lado,
+                                                            java.time.LocalDate fechaInicio);
+
     long countByFechaAltaIsNotNull();
 
     @Query("select max(e.actualizadoEn) from Episodio e")

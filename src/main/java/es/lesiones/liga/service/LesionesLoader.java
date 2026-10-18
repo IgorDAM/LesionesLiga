@@ -26,8 +26,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Carga seed/lesiones.csv (lesiones activas recopiladas de prensa/webs). Idempotente: si el jugador ya tiene
- * una lesión abierta del mismo tipo y lado, no se duplica. No se ejecuta en los perfiles demo ni test.
+ * Carga seed/lesiones.csv (lesiones recopiladas de prensa/webs). La columna opcional 13 «fecha_alta» marca las ya
+ * recuperadas: se guardan con fecha de baja y de alta (histórico para comparar tiempos de recuperación). Idempotente:
+ * si el jugador ya tiene una lesión abierta del mismo tipo y lado no se duplica (y, si la fila trae alta, se cierra);
+ * un episodio con el mismo inicio nunca se vuelve a crear ni a abrir. No se ejecuta en los perfiles demo ni test.
  * Los episodios cargados quedan marcados en «notas» con su origen y, si procede, con REVISAR.
  */
 @Slf4j
@@ -45,7 +47,7 @@ public class LesionesLoader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws IOException {
-        int nuevos = 0, existentes = 0, omitidos = 0;
+        int nuevos = 0, existentes = 0, omitidos = 0, cerrados = 0;
         for (String[] f : leer("seed/lesiones.csv")) {
             if (f.length < 10) { omitidos++; continue; }
             Club club = clubes.findByNombreIgnoreCase(f[0]).orElse(null);
@@ -65,7 +67,32 @@ public class LesionesLoader implements CommandLineRunner {
                         return jugadores.save(nuevo);
                     });
             Episodio.Lado lado = Episodio.Lado.valueOf(f[4]);
-            if (episodios.existsByJugadorIdAndTipoIdAndLadoAndFechaAltaIsNull(jugador.getId(), tipo.getId(), lado)) {
+            LocalDate inicio = LocalDate.parse(f[5]);
+            LocalDate alta = f.length > 12 && !f[12].isBlank() ? LocalDate.parse(f[12].trim()) : null;
+            if (alta != null && alta.isBefore(inicio)) {
+                log.warn("lesiones.csv: fecha_alta anterior al inicio ({} {}), línea omitida", f[1], f[3]);
+                omitidos++;
+                continue;
+            }
+            List<Episodio> abiertos = episodios.findByJugadorIdAndTipoIdAndLadoAndFechaAltaIsNull(
+                    jugador.getId(), tipo.getId(), lado);
+            if (!abiertos.isEmpty()) {
+                if (alta != null) {
+                    // La lesión ya está recuperada: se cierra el episodio abierto para conservar el histórico.
+                    for (Episodio abierto : abiertos) {
+                        abierto.setFechaAlta(alta);
+                        abierto.setNotas((abierto.getNotas() == null ? "" : abierto.getNotas() + " ")
+                                + "Alta registrada el " + alta + " (carga de seed).");
+                        episodios.save(abierto);
+                    }
+                    cerrados++;
+                } else {
+                    existentes++;
+                }
+                continue;
+            }
+            // Mismo jugador, tipo, lado y fecha de inicio ya registrados (p. ej. episodio ya cerrado): no se duplica ni se reabre.
+            if (episodios.existsByJugadorIdAndTipoIdAndLadoAndFechaInicio(jugador.getId(), tipo.getId(), lado, inicio)) {
                 existentes++;
                 continue;
             }
@@ -73,7 +100,8 @@ public class LesionesLoader implements CommandLineRunner {
             e.setJugador(jugador);
             e.setTipo(tipo);
             e.setLado(lado);
-            e.setFechaInicio(LocalDate.parse(f[5]));
+            e.setFechaInicio(inicio);
+            e.setFechaAlta(alta);
             e.setCirugia(Boolean.parseBoolean(f[6]));
             e.setDiagnosticoClub(f[8]);
             e.setFuenteUrl(f[9]);
@@ -89,8 +117,9 @@ public class LesionesLoader implements CommandLineRunner {
             episodios.save(e);
             nuevos++;
         }
-        if (nuevos + existentes + omitidos > 0) {
-            log.info("lesiones.csv: {} nuevas, {} ya existentes, {} omitidas", nuevos, existentes, omitidos);
+        if (nuevos + existentes + omitidos + cerrados > 0) {
+            log.info("lesiones.csv: {} nuevas, {} cerradas por alta, {} ya existentes, {} omitidas",
+                    nuevos, cerrados, existentes, omitidos);
         }
     }
 

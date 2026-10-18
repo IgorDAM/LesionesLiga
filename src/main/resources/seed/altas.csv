@@ -1,5 +1,5 @@
 club;jugador;tipo;fecha_alta_probable;fuente;confirmada;nota
-# Altas verificadas el 18-10-2026 con fichas de jugador, partidos y partes oficiales. confirmada=false: pendiente de confirmar. Aun no las lee el cargador (cerrar por API admin).
+# Altas verificadas el 18-10-2026 con fichas de jugador, partidos y partes oficiales. confirmada=false: pendiente de confirmar. Las confirmadas ya figuran con fecha_alta en lesiones.csv (el cargador las cierra).
 Alavés;Ville Koski;Sobrecarga;2026-10-10;https://www.comuniate.com/noticias/38359/jugadores-convocados-para-el-partido-alaves-y-atletico-jornada-8;true;Convocado contra el Atlético (10-10).
 Rayo Vallecano;Luiz Felipe;Rotura fibrilar;2026-10-10;https://www.vavel.com/es/futbol/2026/10/10/rayo-vallecano/1274650-los-jugadores-convocados-por-benat-san-jose-para-recibir-al-athletic-club.html;true;Convocado contra el Athletic (10-10). Después se lesionó de nuevo (LCA, episodio nuevo en lesiones.csv).
 Barcelona;Raphinha;Sobrecarga;2026-10-16;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Jugó el fin de semana 16-18 de octubre; el episodio debe cerrarse.
