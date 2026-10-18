@@ -1,4 +1,15 @@
 club;jugador;tipo;fecha_alta_probable;fuente;confirmada;nota
-# Altas probables. confirmada=false: pendiente de que Igor las confirme (todavia no se aplican). Aun no las lee el cargador.
-Alavés;Ville Koski;Sobrecarga;2026-10-10;https://www.comuniate.com/noticias/38359/jugadores-convocados-para-el-partido-alaves-y-atletico-jornada-8;false;Convocado contra el Atlético (10-10). Su plazo inicial era de 4-5 semanas desde el 01-10.
-Rayo Vallecano;Luiz Felipe;Rotura fibrilar;2026-10-10;https://www.vavel.com/es/futbol/2026/10/10/rayo-vallecano/1274650-los-jugadores-convocados-por-benat-san-jose-para-recibir-al-athletic-club.html;false;Convocado contra el Athletic (10-10).
+# Altas verificadas el 18-10-2026 con fichas de jugador, partidos y partes oficiales. confirmada=false: pendiente de confirmar. Aun no las lee el cargador (cerrar por API admin).
+Alavés;Ville Koski;Sobrecarga;2026-10-10;https://www.comuniate.com/noticias/38359/jugadores-convocados-para-el-partido-alaves-y-atletico-jornada-8;true;Convocado contra el Atlético (10-10).
+Rayo Vallecano;Luiz Felipe;Rotura fibrilar;2026-10-10;https://www.vavel.com/es/futbol/2026/10/10/rayo-vallecano/1274650-los-jugadores-convocados-por-benat-san-jose-para-recibir-al-athletic-club.html;true;Convocado contra el Athletic (10-10). Después se lesionó de nuevo (LCA, episodio nuevo en lesiones.csv).
+Barcelona;Raphinha;Sobrecarga;2026-10-16;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Jugó el fin de semana 16-18 de octubre; el episodio debe cerrarse.
+Barcelona;Frenkie de Jong;Esguince de ligamento lateral interno;2026-10-16;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Alta tras unos 104 días de baja.
+Celta Vigo;Andrés Antañón;Esguince grado I;2026-10-14;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Verificado en su ficha.
+Elche;Buba Sangaré;Sobrecarga;2026-10-16;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Verificado en su ficha. Revisar club al cerrar.
+Málaga;Jens Cajuste;Sobrecarga;2026-10-16;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Verificado en su ficha. Revisar club al cerrar.
+Osasuna;Raúl Moro;Sobrecarga;2026-10-17;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;El diagnóstico real era rotura grado I del bíceps femoral derecho (lesionado el 19-09); en lesiones.csv figura Sobrecarga sin lado: corregir al cerrar.
+Real Madrid;Éder Militão;Sobrecarga;2026-10-18;https://www.futbolfantasy.com/laliga/lesionados/eventos;false;Tras 179 días de baja; posible rotura del tendón proximal, tipo correcto Rotura completa o avulsión. Confirmar.
+Sevilla;Lucas Stassin;Sobrecarga de aductores;2026-10-16;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Verificado en su ficha. Revisar club al cerrar.
+Sevilla;Rubén Vargas;Lesión de menisco;2026-10-11;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Verificado en su ficha. Revisar club al cerrar.
+Valencia;Mouctar Diakhaby;Sobrecarga de aductores;2026-10-10;https://www.futbolfantasy.com/laliga/lesionados/eventos;true;Verificado en su ficha. Revisar club al cerrar.
+Las Palmas;Jesé;Rotura de aductor;2026-10-16;https://cadenaser.com;false;Según Cadena SER; confirmar.

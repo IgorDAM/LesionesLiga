@@ -23,3 +23,11 @@ Cada sábado se contrastan las lesiones activas con las fuentes, se anotan las a
 - Añadidas 12 lesiones que faltaban (69 filas en total): Puertas (Albacete), Viti, Clemente, Jesé y Ale García (Las Palmas), Roca, Morlanes y Jan Salas (Mallorca), Iosifov, Otero y Nacho Martín (Sporting), Foulquier (Valencia, ahora con aductor y rodilla operada de febrero).
 - No cargadas por no encajar en el catálogo o no estar claras: Ely (artritis de tobillo), Román y El-Abdellaoui (artroscopia de rodilla sin diagnóstico), Konrad (cartílago de rodilla), Jastin García (fuentes en conflicto), Petit, Park, Sandro, Cedeño, Recoba, Loum, Ferrari, Isfan, Pedrola, y las «molestias» de Primera.
 - Lesiones de 2025/26 que conviene comprobar si siguen activas: Puertas, Jan Salas, Tabatadze, Adilson, Guille Bueno.
+
+## 2026-10-18 · actualización semanal (con investigación previa)
+- Método: antes de escribir se contrastaron las listas con partidos jugados, partes oficiales de los clubes y fichas de jugador, porque las listas de lesionados llevan retraso (p. ej. Raphinha seguía como lesionado tras jugar).
+- Altas verificadas (`seed/altas.csv`): Raphinha y De Jong (16-10), Antañón (14-10), Sangaré y Cajuste (16-10), Raúl Moro (17-10), Stassin (16-10), Vargas (11-10), Diakhaby (10-10), Koski y Luiz Felipe (10-10). Militão (18-10) y Jesé (16-10) sin confirmar.
+- Nuevas lesiones (17 filas): Eric García (cuádriceps dcho.) y Koundé (tobillo izdo.), lesionados el 17-10 en La Cartuja ante el Betis, parte oficial del 18-10; Koke, Cristian Romero, Borja Iglesias, Pablo Durán, Guridi, Miguel Sierra, Kochorashvili, Aimar Oroz (recaída), Beitia, Luiz Felipe (LCA, episodio nuevo), Juan Cruz (recaída), Murillo, Jastin García y Dani Pérez.
+- Correcciones a aplicar al cerrar: Raúl Moro era rotura grado I (19-09); Militão posible rotura completa/avulsión; Pablo Durán gemelo interno dcho.
+- Pendientes de comprobar: Jan Salas, Guille Bueno, Adilson, Tabatadze, Puertas y Viti (Jornada Perfecta los da como lesión muscular y la BD tiene menisco).
+- Limitación: el cargador no lee `altas.csv` ni actualiza episodios existentes; las altas y correcciones requieren la API admin (`PATCH /api/admin/episodios/{id}/alta`, `PUT /api/admin/episodios/{id}`) o ampliar `LesionesLoader`.
