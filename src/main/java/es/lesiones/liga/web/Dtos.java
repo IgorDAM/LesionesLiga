@@ -40,7 +40,8 @@ public final class Dtos {
                               LocalDate fechaInicio, LocalDate fechaAlta, long diasBaja, boolean activa,
                               Integer partidosPerdidos, boolean recaida, boolean cirugia,
                               String diagnosticoClub, Integer plazoEstimadoDias, LocalDate regresoEstimado,
-                              String fuenteUrl, String fuenteNombre, LocalDate fechaFuente, String notas) {
+                              String fuenteUrl, String fuenteNombre, LocalDate fechaFuente, String notas,
+                              boolean inicioVerificado) {
     }
 
     public record FichaJugadorDto(JugadorDto jugador, List<EpisodioDto> activas, List<EpisodioDto> historial) {
@@ -60,7 +61,9 @@ public final class Dtos {
     public record EstadisticaDto(Long tipoId, String tipo, String zonaCodigo, String zona,
                                  int casosCerrados, int casosActivos,
                                  Double mediaDias, Double medianaDias, Long minDias, Long maxDias,
+                                 Double p25Dias, Double p75Dias,
                                  Double mediaPartidos,
+                                 int casosCerradosVerificados,
                                  int casosConEstimacion, Double desvioMedioVsEstimado,
                                  boolean pocosCasos, int minimoCasos,
                                  List<EpisodioDto> casos) {
@@ -99,7 +102,8 @@ public final class Dtos {
                                 @NotBlank @Size(max = 500) @Pattern(regexp = "^https?://.+", message = "debe ser una URL http(s)") String fuenteUrl,
                                 @Size(max = 120) String fuenteNombre,
                                 LocalDate fechaFuente,
-                                @Size(max = 1000) String notas) {
+                                @Size(max = 1000) String notas,
+                                Boolean inicioVerificado) {
     }
 
     public record Alta(@NotNull LocalDate fechaAlta, @Min(0) Integer partidosPerdidos) {

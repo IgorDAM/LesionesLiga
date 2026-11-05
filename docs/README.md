@@ -14,14 +14,9 @@ los jugadores con **la misma lesión**.
 
 | Parte | Estado |
 |---|---|
-| Frontend (HTML/JS/CSS + mapa SVG) | Probado con jsdom contra una API simulada: 26 comprobaciones (pestañas, mapa clicable, ficha, comparativa, formularios de administración, escape de HTML). El mapa se renderizó a imagen y se comprobó la lateralidad. |
-| Backend (Spring Boot) | **Escrito y revisado a mano, pero no compilado ni ejecutado.** El entorno donde lo creé no podía descargar dependencias de Maven Central. Solo se verificó con `javac` que no hay errores de sintaxis. |
-| Despliegue en Azure (`AZURE.md`) | **No probado.** Se basa en la documentación oficial de Microsoft; el proyecto nunca se ha ejecutado contra Azure SQL (solo H2 y, en teoría, PostgreSQL). |
-
-**Primer paso al recibirlo:** ejecuta `mvn test`. Hay 6 tests de integración (`ApiTest`) que cubren
-el catálogo, el token de administración, la búsqueda sin tildes, las estadísticas, las validaciones
-y la exportación CSV. Si algo falla al compilar, será un detalle menor; pásame el error y lo corrijo.
-Al subirlo a GitHub, la acción `.github/workflows/ci.yml` ejecuta los tests automáticamente.
+| Frontend (HTML/JS/CSS + mapa SVG) | Probado con jsdom contra una API simulada (pestañas con teclado, carga con reintentos, comparativa con cuartiles y filtro de fechas verificadas, conservación del foco). |
+| Backend (Spring Boot) | Desplegado en Azure. El CI (`.github/workflows/ci.yml`) ejecuta `mvn verify` en cada push; los tests de integración (`ApiTest`) cubren catálogo, token, límite de intentos, cabeceras y caché, búsqueda sin tildes, estadísticas, validaciones y exportación CSV. |
+| Despliegue en Azure (`AZURE.md`) | Funcionando con SQL Server (Azure SQL). El estado real está en `AZURE.md`. |
 
 ## Cómo ejecutarlo
 
@@ -96,7 +91,7 @@ o usa el formulario de administración.
 
 Pública (solo lectura): `GET /api/zonas`, `/api/tipos?zona=`, `/api/clubes`, `/api/jugadores?q=`,
 `/api/jugadores/{id}`, `/api/lesiones/activas?division=&clubId=&zona=`, `/api/resumen`,
-`/api/estadisticas/zona/{codigo}`, `/api/estadisticas/tipo/{id}?cirugia=&incluirRecaidas=`.
+`/api/estadisticas/zona/{codigo}`, `/api/estadisticas/tipo/{id}?cirugia=&incluirRecaidas=&soloVerificados=`.
 
 Administración (cabecera `X-Admin-Token`): `POST /api/admin/clubes`, `PUT /api/admin/clubes/{id}`,
 `PATCH /api/admin/clubes/{id}/revisado`, `POST /api/admin/jugadores`, `PATCH /api/admin/jugadores/{id}/club`,
@@ -117,6 +112,17 @@ Antes de nada, crea un presupuesto de 1 €/mes con alerta en Cost Management pa
 
 > Los límites y condiciones de los planes gratuitos cambian: compruébalos en la documentación de Azure antes de depender de ellos.
 > El `Dockerfile` incluido es opcional (por ejemplo, para Azure Container Apps u otro hosting con Docker); App Service con Java SE no lo necesita.
+
+## Seguridad y caché
+
+- **`ADMIN_TOKEN` es obligatorio con el perfil `prod`:** la app se niega a arrancar si falta o es `cambia-esto`. Conviene una clave de 16 caracteres o más (si es más corta, solo se avisa en el log).
+- Tras 10 intentos fallidos con el token desde una misma dirección, `/api/admin/**` responde `429` durante 15 minutos (el contador vive en memoria y se reinicia al reiniciar la app).
+- Todas las respuestas llevan cabeceras de seguridad (CSP, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`).
+- Los GET públicos de `/api/**` se cachean 2 minutos (`Cache-Control: public, max-age=120`); `/api/admin/**` y los errores nunca. Un cambio hecho desde el panel puede tardar hasta 2 minutos en verse para el resto de visitantes; el administrador, con sesión iniciada, siempre ve datos frescos.
+
+## Calidad de los datos
+
+Cada episodio guarda si su **fecha de inicio está verificada** en una fuente (`inicioVerificado`). En `seed/lesiones.csv` sale de la columna `inicio_exacto`; al arrancar, el cargador rellena el campo en episodios antiguos que aún no lo tenían, sin pisar un valor ya decidido. La comparativa muestra cuántos casos tienen fecha aproximada, marca esos casos y permite filtrar «Solo inicio verificado». Además de mediana y media se muestra el rango habitual (cuartiles 1 y 3).
 
 ## Fuentes y límites legales
 

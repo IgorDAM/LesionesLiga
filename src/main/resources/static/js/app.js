@@ -27,7 +27,12 @@ async function api(ruta, { method = 'GET', body, admin = false } = {}) {
   const cabeceras = {};
   if (body !== undefined) cabeceras['Content-Type'] = 'application/json';
   if (admin) cabeceras['X-Admin-Token'] = adminToken;
-  const res = await fetch(ruta, { method, headers: cabeceras, body: body !== undefined ? JSON.stringify(body) : undefined });
+  const res = await fetch(ruta, {
+    method,
+    headers: cabeceras,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+    cache: adminToken ? 'no-store' : 'default', // el administrador siempre ve sus cambios al momento
+  });
   if (!res.ok) {
     let mensaje = res.statusText || `Error ${res.status}`;
     try { mensaje = (await res.json()).error || mensaje; } catch { /* cuerpo no JSON */ }
@@ -74,13 +79,24 @@ async function cargarResumen() {
     $('#actualizacion').textContent = r.ultimaActualizacion
       ? `Última actualización: ${new Date(r.ultimaActualizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} · ${plural(r.lesionadosActivos, 'lesionado', 'lesionados')} ahora · ${plural(r.casosCerrados, 'caso cerrado', 'casos cerrados')}`
       : 'Aún no hay lesiones registradas.';
+    const kpis = $('#ahora-kpis');
+    if (kpis) {
+      kpis.innerHTML = [
+        [r.lesionadosActivos, 'lesionados ahora'], [r.primera, 'en Primera'],
+        [r.segunda, 'en Segunda'], [r.casosCerrados, 'altas en el histórico'],
+      ].map(([n, t]) => `<div class="cifra"><b>${num(n)}</b><span>${t}</span></div>`).join('');
+    }
   } catch { $('#actualizacion').textContent = ''; }
 }
 
 const PESTANAS = ['ahora', 'jugadores', 'comparar', 'admin'];
 
 function activarTab(id) {
-  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+  document.querySelectorAll('[data-tab]').forEach((b) => {
+    const activa = b.dataset.tab === id;
+    b.setAttribute('aria-selected', String(activa));
+    b.tabIndex = activa ? 0 : -1; // solo la pestaña activa entra en el orden de tabulación; el resto con flechas
+  });
   document.querySelectorAll('.panel').forEach((p) => { p.hidden = p.id !== `tab-${id}`; });
   try { history.replaceState(null, '', `#${id}`); } catch { /* ignorar */ }
   if (id === 'ahora') cargarAhora();
@@ -95,6 +111,7 @@ let ultimaLista = [];
 function montarAhora() {
   Object.assign(filtros, { division: '', clubId: '', zona: '' });
   $('#tab-ahora').innerHTML = `
+    <div id="ahora-kpis" class="cifras" aria-label="Resumen"></div>
     <div class="filtros">
       <label>División<select id="f-division"><option value="">Todas</option><option value="PRIMERA">Primera</option><option value="SEGUNDA">Segunda</option></select></label>
       <label>Club<select id="f-club"><option value="">Todos</option>${opcionesClubes()}</select></label>
@@ -124,14 +141,20 @@ function montarAhora() {
   });
 }
 
+let turnoAhora = 0; // descarta respuestas antiguas si cambias de filtro rápido
+
 async function cargarAhora() {
+  const turno = ++turnoAhora;
   const q = new URLSearchParams();
   if (filtros.division) q.set('division', filtros.division);
   if (filtros.clubId) q.set('clubId', filtros.clubId);
   try {
-    ultimaLista = await api(`/api/lesiones/activas?${q}`);
+    const lista = await api(`/api/lesiones/activas?${q}`);
+    if (turno !== turnoAhora) return;
+    ultimaLista = lista;
     pintarAhora();
   } catch (e) {
+    if (turno !== turnoAhora) return;
     $('#ahora-lista').innerHTML = `<p class="error">${esc(e.message)}</p>`;
   }
   cargarResumen();
@@ -164,12 +187,15 @@ function montarJugadores() {
     <input id="q-jugador" type="search" placeholder="Escribe al menos 2 letras…" autocomplete="off">
     <ul id="res-jugadores" class="resultados"></ul>
     <div id="ficha"></div>`;
+  let turnoBusqueda = 0;
   const buscar = debounce(async () => {
     const q = $('#q-jugador').value.trim();
     const ul = $('#res-jugadores');
+    const turno = ++turnoBusqueda;
     if (q.length < 2) { ul.innerHTML = ''; return; }
     try {
       const lista = await api(`/api/jugadores?q=${encodeURIComponent(q)}`);
+      if (turno !== turnoBusqueda) return;
       ul.innerHTML = lista.length
         ? lista.map((j) => `<li><button data-jugador="${j.id}">${esc(j.nombre)} <span class="sub">${esc(j.club)} · ${divisionTxt(j.division)}</span></button></li>`).join('')
         : '<li class="vacio">Ningún jugador coincide. Solo aparecen los jugadores con lesiones registradas o dados de alta.</li>';
@@ -223,10 +249,11 @@ async function abrirFicha(id) {
 
 /* ================= Comparar recuperaciones ================= */
 
-const cmp = { zona: '', tipoId: null, cirugia: '', recaidas: true };
+const cmp = { zona: '', tipoId: null, cirugia: '', recaidas: true, verificados: false, tipoPintado: null };
+let turnoDetalle = 0;
 
 function montarComparar() {
-  Object.assign(cmp, { zona: '', tipoId: null, cirugia: '', recaidas: true });
+  Object.assign(cmp, { zona: '', tipoId: null, cirugia: '', recaidas: true, verificados: false, tipoPintado: null });
   $('#tab-comparar').innerHTML = `
     <p class="sub">Elige una zona (en la lista o pulsando el cuerpo) y un tipo de lesión para ver cuánto han tardado en volver los jugadores registrados. Cuantos más casos, más fiable es la comparación.</p>
     <div class="con-mapa">
@@ -255,6 +282,7 @@ function montarComparar() {
   det.addEventListener('change', (ev) => {
     if (ev.target.id === 'c-cirugia') cmp.cirugia = ev.target.value;
     if (ev.target.id === 'c-recaidas') cmp.recaidas = ev.target.checked;
+    if (ev.target.id === 'c-verificados') cmp.verificados = ev.target.checked;
     mostrarDetalle();
   });
   det.addEventListener('click', (ev) => {
@@ -269,6 +297,7 @@ async function abrirComparativa(zona, tipoId) {
   cmp.tipoId = tipoId;
   cmp.cirugia = '';
   cmp.recaidas = true;
+  cmp.verificados = false;
   $('#c-zona').value = zona;
   pintarMapas($('#c-mapa'), [], zona);
   await cargarTiposZona();
@@ -280,6 +309,7 @@ async function cargarTiposZona() {
   if (!cmp.zona) { cont.innerHTML = ''; return; }
   try {
     const filas = await api(`/api/estadisticas/zona/${encodeURIComponent(cmp.zona)}`);
+    cmp.tipoPintado = cmp.tipoId;
     cont.innerHTML = `<h2>${esc(estado.nombresZona[cmp.zona] || cmp.zona)}</h2><div class="tabla-wrap"><table>
       <thead><tr><th>Tipo de lesión</th><th>Gravedad</th><th class="num">Casos cerrados</th><th class="num">Mediana (días)</th><th class="num">Media (días)</th><th class="num">Activos</th></tr></thead><tbody>${
       filas.map((f) => `<tr class="${f.tipoId === cmp.tipoId ? 'clicable' : ''}"><td><button class="enlace" data-tipo="${f.tipoId}">${esc(f.tipo)}</button></td>
@@ -292,20 +322,29 @@ async function mostrarDetalle() {
   if (!cmp.tipoId) { cont.innerHTML = ''; return; }
   const q = new URLSearchParams({ incluirRecaidas: String(cmp.recaidas) });
   if (cmp.cirugia !== '') q.set('cirugia', cmp.cirugia);
+  if (cmp.verificados) q.set('soloVerificados', 'true');
+  const turno = ++turnoDetalle;
   try {
     const d = await api(`/api/estadisticas/tipo/${cmp.tipoId}?${q}`);
+    if (turno !== turnoDetalle) return;
     const desvio = d.desvioMedioVsEstimado;
+    // Al repintar se pierde el foco del control que acabas de tocar: se recuerda y se devuelve después.
+    const foco = cont.contains(document.activeElement) ? document.activeElement.id : '';
     cont.innerHTML = `
       <h3 style="margin-top:1.5rem">${esc(d.tipo)} — ${esc(d.zona)}</h3>
       <div class="opciones">
         <label>Cirugía<select id="c-cirugia"><option value="">Todos los casos</option><option value="true"${cmp.cirugia === 'true' ? ' selected' : ''}>Con cirugía</option><option value="false"${cmp.cirugia === 'false' ? ' selected' : ''}>Sin cirugía</option></select></label>
         <label class="check"><input id="c-recaidas" type="checkbox"${cmp.recaidas ? ' checked' : ''}> Incluir recaídas</label>
+        <label class="check"><input id="c-verificados" type="checkbox"${cmp.verificados ? ' checked' : ''}> Solo inicio verificado</label>
       </div>
       ${d.casosCerrados === 0 ? '<p class="aviso-caja">Todavía no hay casos cerrados de esta lesión con estos filtros, así que no se puede calcular una recuperación media.</p>'
         : d.pocosCasos ? `<p class="aviso-caja">Solo hay ${plural(d.casosCerrados, 'caso cerrado', 'casos cerrados')} (se recomiendan al menos ${d.minimoCasos}). Los valores son orientativos y pueden no ser representativos.</p>` : ''}
+      ${d.casosCerrados > 0 && !cmp.verificados && d.casosCerradosVerificados < d.casosCerrados
+        ? `<p class="sub">${d.casosCerradosVerificados} de ${d.casosCerrados} casos cerrados tienen la fecha de inicio comprobada en una fuente; en el resto es aproximada. Activa «Solo inicio verificado» para ver únicamente los comprobados.</p>` : ''}
       <div class="cifras">
         <div class="cifra"><b>${d.casosCerrados}</b><span>casos cerrados${d.casosActivos ? ` · ${d.casosActivos} activos` : ''}</span></div>
         <div class="cifra"><b>${num(d.medianaDias, 1)}</b><span>mediana (días de baja)</span></div>
+        <div class="cifra"><b>${d.p25Dias == null ? '—' : `${num(d.p25Dias)}–${num(d.p75Dias)}`}</b><span>rango habitual (cuartiles 1–3, días)</span></div>
         <div class="cifra"><b>${num(d.mediaDias, 1)}</b><span>media (días de baja)</span></div>
         <div class="cifra"><b>${d.minDias == null ? '—' : `${d.minDias}–${d.maxDias}`}</b><span>mínimo – máximo (días)</span></div>
         <div class="cifra"><b>${num(d.mediaPartidos, 1)}</b><span>partidos perdidos (media)</span></div>
@@ -315,11 +354,15 @@ async function mostrarDetalle() {
       <h3>Casos</h3>
       <div class="tabla-wrap"><table><thead><tr><th>Jugador</th><th>Lado</th><th>Inicio</th><th>Alta</th><th class="num">Días</th><th class="num">Partidos</th><th>Fuente</th></tr></thead><tbody>${
         d.casos.map((e) => `<tr><td><button class="enlace" data-jugador="${e.jugadorId}">${esc(e.jugador)}</button><div class="sub">${esc(e.club)}</div></td>
-          <td>${esc(ladoTxt(e.lado)) || '—'}${insignias(e)}</td><td>${fecha(e.fechaInicio)}</td>
+          <td>${esc(ladoTxt(e.lado)) || '—'}${insignias(e)}</td><td>${fecha(e.fechaInicio)}${e.inicioVerificado ? '' : '<span class="badge tenue" title="Fecha de inicio aproximada">aprox.</span>'}</td>
           <td>${e.activa ? '<span class="badge alerta">activa</span>' : fecha(e.fechaAlta)}</td>
           <td class="num">${e.diasBaja}</td><td class="num">${num(e.partidosPerdidos)}</td><td>${enlaceFuente(e)}</td></tr>`).join('')}</tbody></table></div>`;
-    cargarTiposZona(); // refresca la fila seleccionada
-  } catch (e) { cont.innerHTML = `<p class="error">${esc(e.message)}</p>`; }
+    if (foco) document.getElementById(foco)?.focus();
+    if (cmp.tipoPintado !== cmp.tipoId) cargarTiposZona(); // refresca la fila seleccionada solo si cambió el tipo
+  } catch (e) {
+    if (turno !== turnoDetalle) return;
+    cont.innerHTML = `<p class="error">${esc(e.message)}</p>`;
+  }
 }
 
 /** Barras horizontales (una por caso cerrado) con la mediana marcada. */
@@ -437,6 +480,7 @@ async function admRegistrar() {
         <label>Inicio<input id="ep-inicio" type="date" required value="${hoyISO()}" max="${hoyISO()}"></label>
         <label>Plazo anunciado por el club (días)<input id="ep-plazo" type="number" min="1"></label>
       </div>
+      <label class="check"><input id="ep-verificado" type="checkbox"> La fecha de inicio está comprobada en la fuente (no es aproximada)</label>
       <label class="check"><input id="ep-recaida" type="checkbox"> Es una recaída</label>
       <label class="check"><input id="ep-cirugia" type="checkbox"> Requirió cirugía</label>
       <label>Diagnóstico tal como lo publica el club (texto corto, sin copiar artículos)<textarea id="ep-diag" maxlength="500" rows="2"></textarea></label>
@@ -493,6 +537,7 @@ async function admRegistrar() {
         fuenteNombre: vacioANull($('#ep-fnombre').value),
         fechaFuente: vacioANull($('#ep-ffecha').value),
         notas: vacioANull($('#ep-notas').value),
+        inicioVerificado: $('#ep-verificado').checked,
       };
       const e = await api('/api/admin/episodios', { method: 'POST', body: cuerpo, admin: true });
       await admRegistrar();
@@ -656,9 +701,49 @@ async function admCopia() {
 
 /* ================= Arranque ================= */
 
+/**
+ * El plan gratuito se «duerme» sin visitas y la base serverless tarda en despertar (hasta ~1 min):
+ * se avisa al visitante y se reintenta en lugar de enseñar un error al primer fallo.
+ */
+async function cargarInicial() {
+  const aviso = setTimeout(() => {
+    const extra = document.getElementById('arranque-extra');
+    if (extra) extra.textContent = 'El servidor y la base de datos gratuitos se duermen sin visitas; despertarlos puede tardar hasta un minuto.';
+  }, 4000);
+  try {
+    for (let intento = 1; ; intento += 1) {
+      try {
+        return await Promise.all([api('/api/zonas'), api('/api/clubes')]);
+      } catch (e) {
+        const definitivo = e.status && e.status < 500 && e.status !== 429; // un 4xx real no se arregla esperando
+        if (definitivo || intento >= 8) throw e;
+        await new Promise((r) => setTimeout(r, 5000));
+      }
+    }
+  } finally {
+    clearTimeout(aviso);
+  }
+}
+
+function teclasPestanas(ev) {
+  const claves = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
+  if (!claves.includes(ev.key)) return;
+  const botones = [...document.querySelectorAll('.tabs [data-tab]')];
+  const actual = botones.findIndex((b) => b === document.activeElement);
+  if (actual < 0) return;
+  ev.preventDefault();
+  let destino = actual;
+  if (ev.key === 'ArrowRight') destino = (actual + 1) % botones.length;
+  if (ev.key === 'ArrowLeft') destino = (actual - 1 + botones.length) % botones.length;
+  if (ev.key === 'Home') destino = 0;
+  if (ev.key === 'End') destino = botones.length - 1;
+  activarTab(botones[destino].dataset.tab);
+  botones[destino].focus();
+}
+
 async function iniciar() {
   try {
-    const [zonas, clubes] = await Promise.all([api('/api/zonas'), api('/api/clubes')]);
+    const [zonas, clubes] = await cargarInicial();
     estado.zonas = zonas;
     estado.clubes = clubes;
     estado.nombresZona = Object.fromEntries(zonas.map((z) => [z.codigo, z.nombre]));
@@ -673,6 +758,7 @@ async function iniciar() {
     const b = ev.target.closest('[data-tab]');
     if (b) activarTab(b.dataset.tab);
   });
+  document.querySelector('.tabs').addEventListener('keydown', teclasPestanas);
   const inicial = location.hash.slice(1);
   activarTab(PESTANAS.includes(inicial) ? inicial : 'ahora');
 }

@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ApiTest {
 
     private static final String TOKEN = "token-de-prueba";
+    private static final int LIMITE_FALLOS = 10; // = LimiteIntentos.MAX_FALLOS
 
     @Autowired
     MockMvc mvc;
@@ -186,5 +187,72 @@ class ApiTest {
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertTrue(csv.contains("id;jugador;club;division"));
         assertTrue(csv.contains("\"'=CMD Jugador Formula\""), "los textos que empiezan por = deben neutralizarse");
+    }
+
+    @Test
+    void elLimiteDeIntentosBloqueaTrasVariosFallosSoloAEsaDireccion() throws Exception {
+        String atacante = "203.0.113.7";
+        var desde = (java.util.function.Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder>) b ->
+                b.with(r -> {
+                    r.setRemoteAddr(atacante);
+                    return r;
+                });
+
+        for (int i = 0; i < LIMITE_FALLOS; i++) {
+            mvc.perform(desde.apply(get("/api/admin/ping").header("X-Admin-Token", "mal-" + i)))
+                    .andExpect(status().isUnauthorized());
+        }
+        // Agotados los intentos, incluso el token correcto queda bloqueado desde esa dirección
+        var bloqueada = mvc.perform(desde.apply(get("/api/admin/ping").header("X-Admin-Token", TOKEN)))
+                .andExpect(status().is(429)).andReturn().getResponse();
+        assertNotNull(bloqueada.getHeader("Retry-After"));
+
+        // Otra dirección no se ve afectada
+        mvc.perform(get("/api/admin/ping").header("X-Admin-Token", TOKEN)).andExpect(status().isOk());
+    }
+
+    @Test
+    void cabecerasDeSeguridadYPoliticaDeCache() throws Exception {
+        var publica = mvc.perform(get("/api/zonas")).andExpect(status().isOk()).andReturn().getResponse();
+        assertEquals("public, max-age=120", publica.getHeader("Cache-Control"));
+        assertEquals("nosniff", publica.getHeader("X-Content-Type-Options"));
+        assertEquals("DENY", publica.getHeader("X-Frame-Options"));
+        assertTrue(publica.getHeader("Content-Security-Policy").contains("frame-ancestors 'none'"));
+
+        var admin = mvc.perform(get("/api/admin/ping").header("X-Admin-Token", TOKEN)).andReturn().getResponse();
+        assertEquals("no-store", admin.getHeader("Cache-Control"));
+
+        // Un error 404 nunca debe quedar cacheado aunque sea un GET público
+        var noExiste = mvc.perform(get("/api/jugadores/999999999")).andExpect(status().isNotFound()).andReturn().getResponse();
+        assertEquals("no-store", noExiste.getHeader("Cache-Control"));
+    }
+
+    @Test
+    void cuartilesYFiltroDeInicioVerificado() throws Exception {
+        long tipo = tipoId("tobillo", "Esguince grado I");
+        long jugador = nuevoJugador("Jugador Verificado");
+        LocalDate hoy = Fechas.hoy();
+
+        // Cinco casos cerrados de 10, 20, 30, 40 y 50 días; solo 10, 30 y 50 con inicio verificado
+        int[] duraciones = {10, 20, 30, 40, 50};
+        for (int i = 0; i < duraciones.length; i++) {
+            LocalDate inicio = hoy.minusDays(400 - i * 70L);
+            Map<String, Object> e = episodio(jugador, tipo, "DERECHO", inicio, inicio.plusDays(duraciones[i]));
+            e.put("inicioVerificado", i % 2 == 0);
+            admin(post("/api/admin/episodios"), e, 201);
+        }
+
+        JsonNode todos = consultar("/api/estadisticas/tipo/" + tipo);
+        assertEquals(5, todos.get("casosCerrados").asInt());
+        assertEquals(3, todos.get("casosCerradosVerificados").asInt());
+        assertEquals(20.0, todos.get("p25Dias").asDouble(), 0.001);
+        assertEquals(40.0, todos.get("p75Dias").asDouble(), 0.001);
+
+        JsonNode verificados = consultar("/api/estadisticas/tipo/" + tipo + "?soloVerificados=true");
+        assertEquals(3, verificados.get("casosCerrados").asInt());
+        assertEquals(30.0, verificados.get("medianaDias").asDouble(), 0.001);
+        assertEquals(20.0, verificados.get("p25Dias").asDouble(), 0.001);
+        assertEquals(40.0, verificados.get("p75Dias").asDouble(), 0.001);
+        assertFalse(verificados.get("casos").get(0).get("inicioVerificado").isNull());
     }
 }

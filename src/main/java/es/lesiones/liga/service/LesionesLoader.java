@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Carga seed/lesiones.csv (lesiones recopiladas de prensa/webs). La columna opcional 13 «fecha_alta» marca las ya
@@ -48,6 +50,11 @@ public class LesionesLoader implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws IOException {
         int nuevos = 0, existentes = 0, omitidos = 0, cerrados = 0;
+        // Una sola lectura de jugadores: antes se recargaban todos por cada fila del CSV.
+        Map<String, Jugador> conocidos = new HashMap<>();
+        for (Jugador j : jugadores.findAll()) {
+            conocidos.put(claveJugador(j.getClub().getId(), j.getNombre()), j);
+        }
         for (String[] f : leer("seed/lesiones.csv")) {
             if (f.length < 10) { omitidos++; continue; }
             Club club = clubes.findByNombreIgnoreCase(f[0]).orElse(null);
@@ -58,14 +65,12 @@ public class LesionesLoader implements CommandLineRunner {
                 omitidos++;
                 continue;
             }
-            Jugador jugador = jugadores.findAll().stream()
-                    .filter(j -> j.getClub().getId().equals(club.getId()) && j.getNombre().equalsIgnoreCase(f[1]))
-                    .findFirst().orElseGet(() -> {
-                        Jugador nuevo = new Jugador();
-                        nuevo.setNombre(f[1]);
-                        nuevo.setClub(club);
-                        return jugadores.save(nuevo);
-                    });
+            Jugador jugador = conocidos.computeIfAbsent(claveJugador(club.getId(), f[1]), k -> {
+                Jugador nuevo = new Jugador();
+                nuevo.setNombre(f[1]);
+                nuevo.setClub(club);
+                return jugadores.save(nuevo);
+            });
             Episodio.Lado lado = Episodio.Lado.valueOf(f[4]);
             LocalDate inicio = LocalDate.parse(f[5]);
             LocalDate alta = f.length > 12 && !f[12].isBlank() ? LocalDate.parse(f[12].trim()) : null;
@@ -74,9 +79,11 @@ public class LesionesLoader implements CommandLineRunner {
                 omitidos++;
                 continue;
             }
+            boolean inicioExacto = f.length > 10 && Boolean.parseBoolean(f[10]);
             List<Episodio> abiertos = episodios.findByJugadorIdAndTipoIdAndLadoAndFechaAltaIsNull(
                     jugador.getId(), tipo.getId(), lado);
             if (!abiertos.isEmpty()) {
+                completarVerificacion(abiertos, inicioExacto);
                 if (alta != null) {
                     // La lesión ya está recuperada: se cierra el episodio abierto para conservar el histórico.
                     for (Episodio abierto : abiertos) {
@@ -92,7 +99,10 @@ public class LesionesLoader implements CommandLineRunner {
                 continue;
             }
             // Mismo jugador, tipo, lado y fecha de inicio ya registrados (p. ej. episodio ya cerrado): no se duplica ni se reabre.
-            if (episodios.existsByJugadorIdAndTipoIdAndLadoAndFechaInicio(jugador.getId(), tipo.getId(), lado, inicio)) {
+            var mismoInicio = episodios.findByJugadorIdAndTipoIdAndLadoAndFechaInicio(
+                    jugador.getId(), tipo.getId(), lado, inicio);
+            if (!mismoInicio.isEmpty()) {
+                completarVerificacion(mismoInicio, inicioExacto);
                 existentes++;
                 continue;
             }
@@ -107,7 +117,8 @@ public class LesionesLoader implements CommandLineRunner {
             e.setFuenteUrl(f[9]);
             e.setFuenteNombre(nombreFuente(f[9]));
             e.setFechaFuente(Fechas.hoy());
-            boolean exacto = f.length > 10 && Boolean.parseBoolean(f[10]);
+            boolean exacto = inicioExacto;
+            e.setInicioVerificado(exacto);
             String extra = f.length > 11 ? f[11].trim() : "";
             e.setNotas("Carga inicial 10-10-2026. "
                     + (exacto ? "Fecha de inicio verificada en la fuente." : "Fecha de inicio aproximada.")
@@ -120,6 +131,23 @@ public class LesionesLoader implements CommandLineRunner {
         if (nuevos + existentes + omitidos + cerrados > 0) {
             log.info("lesiones.csv: {} nuevas, {} cerradas por alta, {} ya existentes, {} omitidas",
                     nuevos, cerrados, existentes, omitidos);
+        }
+    }
+
+    private static String claveJugador(Long clubId, String nombre) {
+        return clubId + "|" + nombre.trim().toLowerCase();
+    }
+
+    /**
+     * Rellena «inicioVerificado» en episodios que ya existían antes de que hubiese esa columna (valor null).
+     * Nunca pisa un valor ya decidido, para no deshacer una verificación hecha a mano.
+     */
+    private void completarVerificacion(List<Episodio> existentes, boolean inicioExacto) {
+        for (Episodio e : existentes) {
+            if (e.getInicioVerificado() == null) {
+                e.setInicioVerificado(inicioExacto);
+                episodios.save(e);
+            }
         }
     }
 

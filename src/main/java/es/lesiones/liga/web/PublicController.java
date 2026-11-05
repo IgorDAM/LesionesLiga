@@ -61,7 +61,8 @@ public class PublicController {
     @GetMapping("/estadisticas/tipo/{id}")
     public EstadisticaDto estadisticasTipo(@PathVariable Long id,
                                            @RequestParam(required = false) Boolean cirugia,
-                                           @RequestParam(defaultValue = "true") boolean incluirRecaidas) {
-        return consulta.estadistica(id, cirugia, incluirRecaidas);
+                                           @RequestParam(defaultValue = "true") boolean incluirRecaidas,
+                                           @RequestParam(defaultValue = "false") boolean soloVerificados) {
+        return consulta.estadistica(id, cirugia, incluirRecaidas, soloVerificados);
     }
 }

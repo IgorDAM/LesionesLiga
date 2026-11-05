@@ -182,6 +182,7 @@ public class AdminService {
         e.setFuenteNombre(Textos.vacioANull(r.fuenteNombre()));
         e.setFechaFuente(r.fechaFuente());
         e.setNotas(Textos.vacioANull(r.notas()));
+        e.setInicioVerificado(Boolean.TRUE.equals(r.inicioVerificado()));
     }
 
     // ---------- Exportación ----------
