@@ -162,3 +162,31 @@ tr.clicable:hover { background: color-mix(in srgb, var(--acento) 8%, transparent
 .form { max-width: 720px; }
 .form-fila { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0 1rem; }
 select[size] { padding: .25rem; }
+
+/* ---- Arranque en frío (el plan gratuito se duerme sin visitas) ---- */
+.arranque { display: flex; gap: .8rem; align-items: center; padding: 1.25rem 0; }
+.spinner {
+  width: 1.4rem; height: 1.4rem; border-radius: 50%; flex: none;
+  border: 3px solid var(--linea); border-top-color: var(--acento);
+  animation: girar .9s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+/* ---- Foco visible (teclado) ---- */
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.mapa .z:focus-visible { outline: none; }
+.mapa .z:focus-visible ellipse, .mapa .z:focus-visible rect { stroke: var(--texto); stroke-width: 3; }
+.tabs button:focus-visible { outline-offset: -3px; }
+
+/* ---- Detalles ---- */
+.badge.tenue { background: transparent; border: 1px dashed var(--cuerpo-borde); color: var(--suave); }
+#ahora-kpis { margin-top: 0; }
+th { position: sticky; top: 0; background: var(--fondo); }
+.pie p { margin: 0 0 .5rem; }
+
+@media (max-width: 640px) {
+  .cabecera h1 { font-size: 1.35rem; }
+  .cifra b { font-size: 1.25rem; }
+  td, th { padding: .5rem .4rem; }
+}

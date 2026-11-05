@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Parte de lesiones · Primera y Segunda</title>
   <meta name="description" content="Lesiones actuales de los jugadores de Primera y Segunda División y comparativa de tiempos de recuperación por tipo de lesión.">
+  <meta name="theme-color" content="#1b7f4b">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Parte de lesiones · Primera y Segunda">
+  <meta property="og:description" content="Qué lesión tiene ahora cada jugador de Primera y Segunda y cuánto tardan en recuperarse los que sufren la misma.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b7f4b'/%3E%3Crect x='13' y='6' width='6' height='20' rx='1.5' fill='white'/%3E%3Crect x='6' y='13' width='20' height='6' rx='1.5' fill='white'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
@@ -17,22 +22,31 @@
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Secciones">
-    <button role="tab" data-tab="ahora" aria-selected="true">Lesionados ahora</button>
-    <button role="tab" data-tab="jugadores" aria-selected="false">Jugadores</button>
-    <button role="tab" data-tab="comparar" aria-selected="false">Comparar recuperaciones</button>
-    <button role="tab" data-tab="admin" aria-selected="false">Administración</button>
+    <button role="tab" id="tab-btn-ahora" aria-controls="tab-ahora" data-tab="ahora" aria-selected="true">Lesionados ahora</button>
+    <button role="tab" id="tab-btn-jugadores" aria-controls="tab-jugadores" data-tab="jugadores" aria-selected="false" tabindex="-1">Jugadores</button>
+    <button role="tab" id="tab-btn-comparar" aria-controls="tab-comparar" data-tab="comparar" aria-selected="false" tabindex="-1">Comparar recuperaciones</button>
+    <button role="tab" id="tab-btn-admin" aria-controls="tab-admin" data-tab="admin" aria-selected="false" tabindex="-1">Administración</button>
   </nav>
 
   <main>
-    <section id="tab-ahora" class="panel" role="tabpanel"></section>
-    <section id="tab-jugadores" class="panel" role="tabpanel" hidden></section>
-    <section id="tab-comparar" class="panel" role="tabpanel" hidden></section>
-    <section id="tab-admin" class="panel" role="tabpanel" hidden></section>
+    <section id="tab-ahora" class="panel" role="tabpanel" aria-labelledby="tab-btn-ahora">
+      <div id="arranque" class="arranque" role="status">
+        <span class="spinner" aria-hidden="true"></span>
+        <div><strong>Conectando con el servidor…</strong><div id="arranque-extra" class="sub"></div></div>
+      </div>
+      <noscript><p class="aviso-caja">Esta web necesita JavaScript para mostrar los datos.</p></noscript>
+    </section>
+    <section id="tab-jugadores" class="panel" role="tabpanel" aria-labelledby="tab-btn-jugadores" hidden></section>
+    <section id="tab-comparar" class="panel" role="tabpanel" aria-labelledby="tab-btn-comparar" hidden></section>
+    <section id="tab-admin" class="panel" role="tabpanel" aria-labelledby="tab-btn-admin" hidden></section>
   </main>
 
   <footer class="pie">
     <p>Los datos se recopilan a mano de comunicados oficiales de clubes y de LaLiga; cada lesión enlaza a su fuente.
       Proyecto personal, sin relación con LaLiga ni con los clubes. Las comparativas son orientativas y no constituyen consejo médico.</p>
+    <p>Aviso de privacidad: solo se recogen datos de lesiones que los propios clubes o la prensa ya han hecho públicos, con su fuente.
+      Si eres una de las personas mencionadas, o representas a un club, y quieres corregir o retirar un dato,
+      abre una incidencia en <a href="https://github.com/IgorDAM/LesionesLiga/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
   </footer>
 
   <script type="module" src="js/app.js"></script>

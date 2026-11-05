@@ -74,7 +74,7 @@ Web App → **Settings → Environment variables → App settings** → añade:
 | `DATABASE_URL` | `jdbc:sqlserver://SERVIDOR.database.windows.net:1433;database=lesiones;encrypt=true;trustServerCertificate=false;loginTimeout=90` |
 | `DATABASE_USER` | tu usuario administrador |
 | `DATABASE_PASSWORD` | tu contraseña |
-| `ADMIN_TOKEN` | una contraseña larga y aleatoria (es la del panel de administración) |
+| `ADMIN_TOKEN` | una contraseña larga y aleatoria (es la del panel de administración). **Obligatoria:** sin ella la app no arranca en `prod` (error `ADMIN_TOKEN no está definido…` en el Log stream) |
 | `SERVER_PORT` | `8080` |
 | `WEBSITES_PORT` | `8080` |
 | `JAVA_OPTS` | `-Xmx400m -XX:+UseSerialGC` |
@@ -108,6 +108,8 @@ az webapp deploy --resource-group rg-lesiones --name NOMBRE_DE_TU_APP \
 - Entra en la pestaña **Administración** con tu `ADMIN_TOKEN`.
 
 ## Si algo falla
+
+> Tras una actualización que añade columnas (por ejemplo `inicio_verificado`), Hibernate las crea solo al arrancar (`ddl-auto=update`); la columna es opcional a propósito para no fallar con las filas que ya existen.
 
 | Síntoma | Causa probable |
 |---|---|

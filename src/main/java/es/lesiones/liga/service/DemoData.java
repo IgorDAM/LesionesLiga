@@ -95,6 +95,7 @@ public class DemoData implements CommandLineRunner {
         e.setPlazoEstimadoDias(estimado);
         e.setDiagnosticoClub("DATOS FICTICIOS DE DEMOSTRACIÓN");
         e.setFuenteUrl(URL);
+        e.setInicioVerificado(true);
         e.setFuenteNombre("Demo");
         e.setNotas("DATOS FICTICIOS DE DEMOSTRACIÓN");
         episodios.save(e);

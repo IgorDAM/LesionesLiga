@@ -16,6 +16,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(indexes = {
+        @Index(name = "ix_episodio_alta", columnList = "fecha_alta"),
+        @Index(name = "ix_episodio_tipo", columnList = "tipo_id"),
+        @Index(name = "ix_episodio_jugador", columnList = "jugador_id")
+})
 public class Episodio {
 
     public enum Lado { DERECHO, IZQUIERDO, NO_APLICA }
@@ -40,9 +45,17 @@ public class Episodio {
     private LocalDate fechaInicio;
 
     /** null = sigue lesionado. */
+    @Column(name = "fecha_alta")
     private LocalDate fechaAlta;
 
     private Integer partidosPerdidos;
+
+    /**
+     * true = la fecha de inicio está comprobada en una fuente concreta; false/null = aproximada
+     * (p. ej. el día en que una web de fantasy avisó de la lesión). Es nullable a propósito: así
+     * {@code ddl-auto=update} puede añadir la columna a una tabla con filas sin necesitar valor por defecto.
+     */
+    private Boolean inicioVerificado;
 
     @Column(nullable = false)
     private boolean recaida;

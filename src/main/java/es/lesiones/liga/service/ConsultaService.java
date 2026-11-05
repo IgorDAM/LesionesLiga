@@ -123,8 +123,9 @@ public class ConsultaService {
      *
      * @param cirugia          null = todos; true/false = solo con/sin cirugía
      * @param incluirRecaidas  si es false se descartan las recaídas (suelen tardar distinto)
+     * @param soloVerificados  si es true solo cuentan los casos con fecha de inicio comprobada en una fuente
      */
-    public EstadisticaDto estadistica(Long tipoId, Boolean cirugia, boolean incluirRecaidas) {
+    public EstadisticaDto estadistica(Long tipoId, Boolean cirugia, boolean incluirRecaidas, boolean soloVerificados) {
         TipoLesion tipo = tipos.findById(tipoId)
                 .orElseThrow(() -> Errores.noEncontrado("Tipo de lesión no encontrado"));
         LocalDate hoy = Fechas.hoy();
@@ -132,11 +133,15 @@ public class ConsultaService {
         var casos = episodios.findByTipoId(tipoId).stream()
                 .filter(e -> cirugia == null || e.isCirugia() == cirugia)
                 .filter(e -> incluirRecaidas || !e.isRecaida())
+                .filter(e -> !soloVerificados || Boolean.TRUE.equals(e.getInicioVerificado()))
                 .sorted(Comparator.comparing(Episodio::getFechaInicio).reversed())
                 .toList();
 
         var cerrados = casos.stream().filter(e -> e.getFechaAlta() != null).toList();
         var dias = diasCerrados(casos);
+
+        int cerradosVerificados = (int) cerrados.stream()
+                .filter(e -> Boolean.TRUE.equals(e.getInicioVerificado())).count();
 
         OptionalDouble partidos = cerrados.stream()
                 .filter(e -> e.getPartidosPerdidos() != null)
@@ -152,7 +157,8 @@ public class ConsultaService {
                 dias.size(), casos.size() - cerrados.size(),
                 media(dias), mediana(dias),
                 dias.isEmpty() ? null : dias.get(0), dias.isEmpty() ? null : dias.get(dias.size() - 1),
-                mediaPartidos,
+                percentil(dias, 0.25), percentil(dias, 0.75),
+                mediaPartidos, cerradosVerificados,
                 conEstimacion.size(), desvio,
                 dias.size() < props.minimoCasos(), props.minimoCasos(),
                 casos.stream().map(e -> Mapper.episodio(e, hoy)).toList());
@@ -170,6 +176,19 @@ public class ConsultaService {
     private static Double media(List<Long> ordenados) {
         return ordenados.isEmpty() ? null
                 : ordenados.stream().mapToLong(Long::longValue).average().orElse(0);
+    }
+
+    /** Percentil por interpolación lineal sobre una lista ya ordenada (p entre 0 y 1). */
+    static Double percentil(List<Long> ordenados, double p) {
+        int n = ordenados.size();
+        if (n == 0) {
+            return null;
+        }
+        double pos = p * (n - 1);
+        int bajo = (int) Math.floor(pos);
+        int alto = (int) Math.ceil(pos);
+        double fraccion = pos - bajo;
+        return ordenados.get(bajo) + (ordenados.get(alto) - ordenados.get(bajo)) * fraccion;
     }
 
     private static Double mediana(List<Long> ordenados) {

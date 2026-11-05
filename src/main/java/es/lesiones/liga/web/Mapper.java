@@ -46,6 +46,7 @@ public final class Mapper {
                 e.getFechaInicio(), e.getFechaAlta(), ChronoUnit.DAYS.between(e.getFechaInicio(), fin), activa,
                 e.getPartidosPerdidos(), e.isRecaida(), e.isCirugia(),
                 e.getDiagnosticoClub(), e.getPlazoEstimadoDias(), regreso,
-                e.getFuenteUrl(), e.getFuenteNombre(), e.getFechaFuente(), e.getNotas());
+                e.getFuenteUrl(), e.getFuenteNombre(), e.getFechaFuente(), e.getNotas(),
+                Boolean.TRUE.equals(e.getInicioVerificado()));
     }
 }
